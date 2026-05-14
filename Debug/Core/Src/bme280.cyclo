@@ -1,0 +1,11 @@
+../Core/Src/bme280.c:13:26:BME280_ReadReg	2
+../Core/Src/bme280.c:30:26:BME280_ReadMulti	2
+../Core/Src/bme280.c:48:26:BME280_WriteReg	1
+../Core/Src/bme280.c:63:19:BME280_Init	8
+../Core/Src/bme280.c:154:21:BME280_compensate_T_int32	1
+../Core/Src/bme280.c:169:21:BME280_compensate_P_int64	2
+../Core/Src/bme280.c:198:21:BME280_compensate_H_int32	1
+../Core/Src/bme280.c:223:19:BME280_ReadMeasurements	6
+../Core/Src/bme280.c:262:19:BME280_TriggerForcedMeasurement	1
+../Core/Src/bme280.c:272:19:BME280_SetOversampling	3
+../Core/Src/bme280.c:299:19:BME280_ReadConfig	2
