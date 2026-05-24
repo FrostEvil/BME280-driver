@@ -259,3 +259,60 @@ HAL_StatusTypeDef BME280_ReadMeasurements(BME280_HandleTypeDef *bme,
 	return HAL_OK;
 }
 
+HAL_StatusTypeDef BME280_TriggerForcedMeasurement(BME280_HandleTypeDef *bme) {
+
+	bme->mode = BME280_FORCED_MODE;
+
+	uint8_t ctrl_meas = ((bme->osrs_t & 0x07) << 5)
+			| ((bme->osrs_p & 0x07) << 2) | (bme->mode & 0x03);
+
+	return BME280_WriteReg(bme, 0xF4, ctrl_meas);
+}
+
+HAL_StatusTypeDef BME280_SetOversampling(BME280_HandleTypeDef *bme,
+		BME280_Oversampling osrs) {
+
+	HAL_StatusTypeDef ctrl_status;
+
+	bme->osrs_t = osrs;
+	bme->osrs_p = osrs;
+	bme->osrs_h = osrs;
+
+	uint8_t ctrl_hum = osrs & 0x07;
+	uint8_t ctrl_meas = ((osrs & 0x07) << 5) | ((osrs & 0x07) << 2)
+			| (bme->mode & 0x03);
+
+	ctrl_status = BME280_WriteReg(bme, 0xF2, ctrl_hum);
+
+	if (ctrl_status == HAL_OK) {
+		ctrl_status = BME280_WriteReg(bme, 0xF4, ctrl_meas);
+
+		if (ctrl_status == HAL_OK) {
+			bme->osrs_t = osrs;
+			bme->osrs_p = osrs;
+			bme->osrs_h = osrs;
+		}
+	}
+	return ctrl_status;
+}
+
+HAL_StatusTypeDef BME280_ReadConfig(BME280_HandleTypeDef *bme) {
+	uint8_t size_params = 3;
+	uint8_t buffer_params[3];
+	uint8_t reg_start_params = 0xF2;
+	HAL_StatusTypeDef readout_params_status;
+
+	readout_params_status = BME280_ReadMulti(bme, reg_start_params,
+			buffer_params, size_params);
+
+	if (readout_params_status == HAL_OK) {
+		bme->curr_params.update_status = (buffer_params[1] & 0x01);
+		bme->curr_params.measuring_status = ((buffer_params[1] & 0x08) >> 2);
+		bme->curr_params.mode = ((buffer_params[2]) & 0x03);
+		bme->curr_params.osrs_p = ((buffer_params[2] & 0x1C) >> 2);
+		bme->curr_params.osrs_t = ((buffer_params[2] & 0xE0) >> 5);
+		bme->curr_params.osrs_h = (buffer_params[0] & 0x07);
+	}
+
+	return readout_params_status;
+}

@@ -54,6 +54,16 @@ typedef enum {
 	BME280_OSRS_X16 = 0X05U
 } BME280_Oversampling;
 
+
+typedef struct {
+	BME280_Oversampling osrs_t;
+	BME280_Oversampling osrs_p;
+	BME280_Oversampling osrs_h;
+	BME280_Mode mode;
+	uint8_t measuring_status;
+	uint8_t update_status;
+} BME280_HandleCurrentParams;
+
 // BME280 device descriptor
 // Holds configuration, calibration data and runtime state
 typedef struct {
@@ -67,11 +77,15 @@ typedef struct {
 	BME280_Mode mode;
 
 	BME280_CalibData calib_data;
+	BME280_HandleCurrentParams curr_params;
 
 } BME280_HandleTypeDef;
 
 HAL_StatusTypeDef BME280_Init(BME280_HandleTypeDef *bme);
 HAL_StatusTypeDef BME280_ReadMeasurements(BME280_HandleTypeDef *bme,
 		float *temp, float *pressure, float *humidity);
-
+HAL_StatusTypeDef BME280_SetOversampling(BME280_HandleTypeDef *bme,
+		BME280_Oversampling osrs);
+HAL_StatusTypeDef BME280_TriggerForcedMeasurement(BME280_HandleTypeDef *bme);
+HAL_StatusTypeDef BME280_ReadConfig(BME280_HandleTypeDef *bme);
 #endif
