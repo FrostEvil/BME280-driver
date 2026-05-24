@@ -1,7 +1,0 @@
-../Core/Src/parse_command.c:13:28:ConvertOversamplingFactor	6
-../Core/Src/parse_command.c:43:12:ConvertOversamplingAnswer	6
-../Core/Src/parse_command.c:74:13:ConvertModeValue	6
-../Core/Src/parse_command.c:92:13:ConvertStatusMeasuring	3
-../Core/Src/parse_command.c:108:13:ConvertStatusUpdate	3
-../Core/Src/parse_command.c:128:9:ParseCommand	4
-../Core/Src/parse_command.c:156:6:ExecuteCommand	5
